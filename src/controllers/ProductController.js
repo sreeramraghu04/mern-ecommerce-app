@@ -2,6 +2,7 @@ import { log } from "console";
 import Product from "../models/productsSchema.js";
 import fs from "fs";
 
+//! create product
 export const createProduct = async (req, res) => {
   try {
     //! get info from the front end
@@ -71,6 +72,7 @@ export const createProduct = async (req, res) => {
   }
 };
 
+//! get all product
 export const getAllProduct = async (req, res) => {
   try {
     const products = await Product.find({})
@@ -101,9 +103,11 @@ export const getAllProduct = async (req, res) => {
   }
 };
 
+//! get single product
 export const getSingleProduct = async (req, res) => {
   try {
-    const product = await Product.findOne({ id: req.params._id })
+    /* const product = await Product.findOne({ id: req.params._id }) */
+    const product = await Product.findById(req.params.id)
       .populate("collection")
       .select("-photo");
     if (!product) {
@@ -127,6 +131,7 @@ export const getSingleProduct = async (req, res) => {
   }
 };
 
+//! get product image
 export const getProductImage = async (req, res) => {
   try {
     const productImg = await Product.findById(req.params.id).select("photo");
@@ -158,6 +163,7 @@ export const getProductImage = async (req, res) => {
   }
 };
 
+//! update product
 export const updateProduct = async (req, res) => {
   try {
     const {
@@ -194,6 +200,7 @@ export const updateProduct = async (req, res) => {
           .status(500)
           .json({ error: "Photo is required and should be less than 1mb" });
     }
+    //* edit product
     const editproduct = await Product.findByIdAndUpdate(
       req.params.id,
       { ...req.fields },
@@ -218,6 +225,7 @@ export const updateProduct = async (req, res) => {
   }
 };
 
+//! delete product
 export const deleteProduct = async (req, res) => {
   try {
     await Product.findByIdAndDelete(req.params.id).select("-photo");
@@ -235,8 +243,10 @@ export const deleteProduct = async (req, res) => {
   }
 };
 
+//! product filter
 export const productFilter = async (req, res) => {
   try {
+    /* {
     const { checked, radio } = request.body;
     // we are getting the filter from the frontend and saving it in an object
     let args = {};
@@ -246,8 +256,26 @@ export const productFilter = async (req, res) => {
     // if collection is selected save to args if price is selected its ranges added to args
     if (checked.length > 0) args.collection = checked;
     if (radio.length) args.price = { $gte: radio[0], $lte: radio[1] };
-    const products = await Product.find(args);
+    const product = await Product.find(args);
     res.status(200).send({
+      success: true,
+      product,
+    }); */
+    const { checked, radio } = req.body;
+
+    let args = {};
+
+    if (checked?.length > 0) {
+      args.collection = { $in: checked };
+    }
+
+    if (radio?.length === 2) {
+      args.price = { $gte: radio[0], $lte: radio[1] };
+    }
+
+    const products = await Product.find(args).select("-photo");
+
+    res.status(200).json({
       success: true,
       products,
     });
@@ -256,6 +284,62 @@ export const productFilter = async (req, res) => {
     res.status(500).json({
       success: false,
       message: `error in product filtering ${error}`,
+      error,
+    });
+  }
+};
+
+//! product count
+export const productCount = async (req, res) => {
+  try {
+    /* {
+    const total = await Product.find({}.estimatedDocumentCount());
+    res.status(200).json({
+      success: true,
+      total,
+    }); */
+    const total = await Product.estimatedDocumentCount();
+    res.status(200).json({
+      success: true,
+      total,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({
+      success: false,
+      message: `error in product count ${error}`,
+      error,
+    });
+  }
+};
+
+//! product list
+// (base on a page)
+export const productList = async (req, res) => {
+  try {
+    const perPage = 6;
+    const page = req.params.page ? req.params.page : 1;
+    const products = await Product
+      //* Fetches documents from the collection.
+      // {} means no filter, so it returns all products.
+      // Same as: “give me every product”
+      .find({})
+      //* Controls which fields are included or excluded.
+      // -photo means exclude the photo field from the result.
+      // Useful when photo is large (like image data) and you don’t want to send it every time.
+      .select("-photo")
+      //* Skips a certain number of documents
+      // Used for pagination
+      .skip((page - 1) * perPage)
+      //* Limits the number of documents returned
+      .limit(perPage)
+      //* Sorts the result
+      .sort({ createdAt: -1 });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({
+      success: false,
+      message: `error in product list, error in per page ctrl ${error}`,
       error,
     });
   }

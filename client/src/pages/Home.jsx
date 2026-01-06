@@ -7,8 +7,12 @@ import { Prices } from "../components/Prices";
 const Home = () => {
   const [products, setProducts] = useState([]);
   const [collection, setCollection] = useState([]);
+
   const [checked, setChecked] = useState([]);
   const [radio, setRadio] = useState([]);
+
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
 
   //! fetching all collections
   const getAllCollections = async () => {
@@ -25,9 +29,9 @@ const Home = () => {
     }
   };
 
-  useEffect(() => {
+  /* useEffect(() => {
     getAllCollections();
-  }, []);
+  }, []); */
   /* console.log(collection); */
 
   //! fethcing all products
@@ -45,30 +49,28 @@ const Home = () => {
     }
   };
 
-  //! collection filtering
-  const handleFilter = (value, id) => {
-    let all = [...checked];
-    if (value) {
-      all.push(id);
-    } else {
-      all = all.filter((item) => item !== id);
-    }
-    setChecked(all);
-  };
-
   /* useEffect(() => {
     getAllProducts();
   }, []); */
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (!checked.length || !radio.length) getAllProducts();
-  }, [checked.length, radio.length]);
+  }, [checked.length, radio.length]); */
 
-  useEffect(() => {
-    if (checked.length || radio.length) filterProduct();
-  }, [checked, radio]);
+  //! fetching total product count
+  const getTotal = async () => {
+    try {
+      const { data } = await axios.get(
+        "http://localhost:5000/api/v1/product/product-count"
+      );
+      setTotal(data?.total);
+    } catch (error) {
+      console.log(error);
+      toast.error("something went wrong while getting total products count");
+    }
+  };
 
-  //! get all filtered products
+  //! filtering the products
   const filterProduct = async () => {
     try {
       const { data } = await axios.post(
@@ -85,6 +87,46 @@ const Home = () => {
     }
   };
 
+  useEffect(() => {
+    getAllCollections();
+    getAllProducts();
+    getTotal();
+  }, []);
+
+  /* useEffect(() => {
+    if (!checked.length && !radio.length) {
+      getAllProducts();
+    }
+  }, [checked, radio]);
+
+  useEffect(() => {
+    if (checked.length || radio.length) filterProduct();
+  }, [checked, radio]); */
+
+  useEffect(() => {
+    if (checked.length === 0 && radio.length === 0) {
+      getAllProducts();
+    } else {
+      filterProduct();
+    }
+  }, [checked, radio]);
+
+  //! product filtering
+  /* const handleFilter = (value, id) => {
+    let all = [...checked];
+    if (value) {
+      all.push(id);
+    } else {
+      all = all.filter((item) => item !== id);
+    }
+    setChecked(all);
+  }; */
+  const handleFilter = (value, id) => {
+    setChecked((prev) =>
+      value ? [...prev, id] : prev.filter((item) => item !== id)
+    );
+  };
+
   return (
     <div className="min-h-screen bg-[#0B0F1A] text-white flex flex-col items-center justify-center px-4 sm:px-6 md:px-10 py-12 sm:py-16">
       {/* Functional Overview Section */}
@@ -92,23 +134,25 @@ const Home = () => {
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-8 sm:mb-10 text-[#8B5CF6]">
           Welcome to ShopVerse{" "}
         </h2>
+
         <p className="mb-10 max-w-3xl mx-auto text-center text-[#9CA3AF] leading-relaxed px-2 text-base sm:text-lg">
           The most immersive shopping experience powered by AR, AI, and smart
           tech.
         </p>
+
         <div className="mt-12 flex items-center justify-center">
           <button className="bg-[#EC4899] hover:bg-[#8B5CF6] text-white px-6 py-3 rounded-xl shadow-md transition-all">
             Start Exploring
           </button>
         </div>
-
+        <div className="p-5 w-12 bg-red-500">{total}</div>
         {/* Collections Filtering */}
         <div className="text-red-500">
           <h1 className="mb-2 underline underline-offset-2 text-xl font-bold">
             List of available collections
           </h1>
           <div className="text-green-500">
-            {collection?.map((item) => {
+            {/* {collection?.map((item) => {
               return (
                 <div className="text-blue-500 bg-gray-500">
                   <Checkbox
@@ -119,7 +163,17 @@ const Home = () => {
                   </Checkbox>
                 </div>
               );
-            })}
+            })} */}
+            {collection?.map((item) => (
+              <div key={item._id} className="text-blue-500 bg-gray-500">
+                <Checkbox
+                  onChange={(e) => handleFilter(e.target.checked, item._id)}
+                  className="text-white"
+                >
+                  {item.name}
+                </Checkbox>
+              </div>
+            ))}
           </div>
           <div>{JSON.stringify(checked, null, 2)}</div>
         </div>
