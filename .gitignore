@@ -1,1 +1,24 @@
+#? server/.gitignore (from cgpt)
+
+# dependencies
+node_modules/
+
+# environment variables
 .env
+
+# logs
+logs/
+*.log
+
+# database
+data/
+*.sqlite
+
+# uploads (optional)
+uploads/
+
+# OS files
+.DS_Store
+
+# editor files
+.vscode/
