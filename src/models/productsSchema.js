@@ -14,6 +14,11 @@ const productsSchema = new mongoose.Schema(
       unique: true,
       maxLength: [25, "max char 25 letters"],
     },
+    slug: {
+      type: String,
+      lowercase: true,
+      unique: true,
+    },
     description: {
       type: String,
       required: true,
@@ -44,9 +49,10 @@ const productsSchema = new mongoose.Schema(
     collection: {
       type: mongoose.ObjectId,
       ref: Collection,
+      required: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export default mongoose.model("Product", productsSchema);

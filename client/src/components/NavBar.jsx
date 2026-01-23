@@ -4,6 +4,9 @@ import { NavLink, Navigate } from "react-router-dom";
 import ListIcon from "@mui/icons-material/List";
 import DisabledByDefaultIcon from "@mui/icons-material/DisabledByDefault";
 import { toast } from "sonner";
+import { FaShoppingCart } from "react-icons/fa";
+import Cartcontext from "../context/Cartcontext.jsx";
+import { Avatar, Badge, Space } from "antd";
 
 const NavBar = () => {
   const [extendedNavBar, setExtendedNavBar] = useState(false);
@@ -11,6 +14,12 @@ const NavBar = () => {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
 
   const { auth, setAuth } = useContext(AuthContext);
+
+  const { cart } = useContext(Cartcontext);
+
+  <Badge count={0} showZero>
+    <Avatar shape="square" size="large"/>
+  </Badge>;
 
   const handleLinkClick = () => {
     setExtendedNavBar(false);
@@ -121,10 +130,23 @@ const NavBar = () => {
                       <NavLink
                         to="/userdetails"
                         onClick={handleLinkClickUserMenu}
-                        className="block px-4 py-2 hover:bg-gray-100 rounded-lg"
+                        className="block px-4 py-2 hover:bg-gray-100 rounded-lg mb-2"
                       >
                         Profile
                       </NavLink>
+                      {/* <NavLink to="/cart">
+                        <FaShoppingCart size={28} />
+                        {cart?.length}
+                      </NavLink> */}
+                      <Badge count={cart?.length} showZero>
+                        <NavLink
+                          to="/cart"
+                          onClick={handleLinkClickUserMenu}
+                          className="block ml-4 hover:bg-gray-100 rounded-lg"
+                        >
+                          <FaShoppingCart size={30} />
+                        </NavLink>
+                      </Badge>
                     </div>
                   )}
                 </div>

@@ -1,11 +1,11 @@
 import React from "react";
 
-const CollectionForm = ({ handleSubmit, value, setValue }) => {
+const CollectionForm = ({ handleSubmit, value, setValue, label }) => {
   return (
     <div>
       <fieldset className="w-full space-y-1 dark:text-gray-400 text-2xl">
         <label className="block font-medium underline">
-          create a new collection
+          {label}
         </label>
         <form className="flex" onSubmit={handleSubmit}>
           <input

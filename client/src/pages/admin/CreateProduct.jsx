@@ -9,7 +9,7 @@ import ProductForm from "../../components/forms/ProductForm";
 const CreateProduct = () => {
   const [collections, setCollections] = useState([]);
   const [collection, setCollection] = useState("");
-  const [photo, setPhoto] = useState("");
+  const [photo, setPhoto] = useState(null);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -19,7 +19,7 @@ const CreateProduct = () => {
   const [shipping, setShipping] = useState(false);
 
   //! Create new product
-  const handleCreate = async (e) => {
+  const handleCreateProduct = async (e) => {
     e.preventDefault();
 
     // Validate collection is selected
@@ -36,18 +36,21 @@ const CreateProduct = () => {
       productData.append("price", price);
       productData.append("quantity", quantity);
       productData.append("photo", photo);
-      productData.append("stock", stock);
+      /* photo && productData.append("photo", photo); */
       productData.append("sold", sold);
+      productData.append("stock", stock);
       productData.append("shipping", shipping);
+      /* productData.append("shipping", shipping ? "true" : "false"); */
 
       const { data } = await axios.post(
         "http://localhost:5000/api/v1/product/create-product",
-        productData
+        productData,
       );
       if (data?.success) {
         toast.success("product created successfully");
         // Reset form after successful creation
         resetForm();
+        /* navigate("/admin/product"); */
       } else {
         toast.error(data?.message);
       }
@@ -65,7 +68,7 @@ const CreateProduct = () => {
     setQuantity("");
     setStock("");
     setSold("");
-    setPhoto("");
+    setPhoto(null);
     setShipping(false);
     setCollection("");
   };
@@ -78,7 +81,7 @@ const CreateProduct = () => {
   const getAllCollection = async () => {
     try {
       const { data } = await axios.get(
-        "http://localhost:5000/api/v1/collection/get-all-collection"
+        "http://localhost:5000/api/v1/collection/get-all-collection",
       );
 
       if (data?.success) {
@@ -91,15 +94,17 @@ const CreateProduct = () => {
   };
 
   return (
-    <div className="flex">
+    <div className="flex text-white">
       <AdminMenu />
       <div className="flex-1 p-6">
-        <h1 className="text-2xl font-bold mb-6">Create New Product</h1>
+        <h1 className="text-2xl text-red-500 font-bold mb-6">
+          Create New Product
+        </h1>
 
         {/* Collection Selection */}
         <div className="mb-6">
-          <label className="block text-lg font-medium mb-3">
-            Select Collection: *
+          <label className="block text-lg font-medium mb-3 text-green-500">
+            Select Collection:
           </label>
           <Select
             placeholder="Select a collection"
@@ -117,7 +122,7 @@ const CreateProduct = () => {
             ))}
           </Select>
           {collection && (
-            <p className="mt-2 text-green-600">
+            <p className="mt-2">
               Selected Collection:{" "}
               <strong>
                 {collections.find((c) => c._id === collection)?.name}
@@ -128,9 +133,8 @@ const CreateProduct = () => {
 
         {/* Product Form */}
         <ProductForm
-          handleCreate={handleCreate}
+          handleCreateProduct={handleCreateProduct}
           collections={collections}
-          setCollection={setCollection}
           name={name}
           description={description}
           photo={photo}
@@ -138,8 +142,9 @@ const CreateProduct = () => {
           quantity={quantity}
           stock={stock}
           sold={sold}
-          setShipping={setShipping}
           // Pass all the setter functions that the ProductForm needs
+          setShipping={setShipping}
+          setCollection={setCollection}
           setName={setName}
           setDescription={setDescription}
           setPhoto={setPhoto}

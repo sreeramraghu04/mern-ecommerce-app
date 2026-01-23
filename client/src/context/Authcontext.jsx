@@ -9,7 +9,10 @@ export const AuthContextProvider = ({ children }) => {
   const [auth, setAuth] = useState({ user: null, token: "" });
 
   //* default axios
-  axios.defaults.headers.common["Authorization"] = auth?.token;
+  /* axios.defaults.headers.common["Authorization"] = auth?.token; */
+  axios.defaults.headers.common["Authorization"] = auth?.token
+    ? `Bearer ${auth.token}`
+    : "";
 
   useEffect(() => {
     const data = localStorage.getItem("ecommerce");
@@ -26,7 +29,6 @@ export const AuthContextProvider = ({ children }) => {
 };
 
 export default AuthContext;
-
 
 /* import React, { createContext, useState, useEffect } from "react";
 import axios from "axios";

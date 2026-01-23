@@ -31,7 +31,7 @@ const CreateCollection = () => {
     try {
       const { data } = await axios.post(
         "http://localhost:5000/api/v1/collection/create-collection",
-        { name }
+        { name },
       );
       if (data?.success) {
         toast.success(`new collection ${name} have been created successfully`);
@@ -50,7 +50,7 @@ const CreateCollection = () => {
   const getAllCollection = async () => {
     try {
       const { data } = await axios.get(
-        "http://localhost:5000/api/v1/collection/get-all-collection"
+        "http://localhost:5000/api/v1/collection/get-all-collection",
       );
 
       if (data?.success) {
@@ -70,7 +70,7 @@ const CreateCollection = () => {
   const handleDelete = async (id) => {
     try {
       const { data } = await axios.delete(
-        `http://localhost:5000/api/v1/collection/delete-collection/${id}`
+        `http://localhost:5000/api/v1/collection/delete-collection/${id}`,
       );
 
       if (data?.success) {
@@ -91,11 +91,11 @@ const CreateCollection = () => {
     try {
       const { data } = await axios.put(
         `http://localhost:5000/api/v1/collection/update-collection/${selected._id}`,
-        { name: updatedname }
+        { name: updatedname },
       );
       if (data?.success) {
         toast.success(
-          `new collection ${updatedname} have been updated successfully`
+          `new collection ${updatedname} have been updated successfully`,
         );
         setSelected(null);
         setUpdatedname("");
@@ -119,6 +119,7 @@ const CreateCollection = () => {
             handleSubmit={handleSubmit}
             value={name}
             setValue={setName}
+            label="create a new collection"
           />
         </div>
         <div className="container p-2 mx-auto sm:p-4">
@@ -171,13 +172,15 @@ const CreateCollection = () => {
             title="want to edit?"
             closable={{ "aria-label": "Custom Close Button" }}
             open={isModalOpen}
-            onOk={handleOk}
+            footer={null}
+            /* onOk={handleOk} */
             onCancel={handleCancel}
           >
             <CollectionForm
               handleSubmit={handleUpdate}
               value={updatedname}
               setValue={setUpdatedname}
+              label="update collection"
             />
           </Modal>
         </div>

@@ -29,6 +29,14 @@ const AdminMenu = () => {
           </li>
           <li>
             <Link
+              to="/admin/collections"
+              className="flex items-center p-2 space-x-3 rounded-md"
+            >
+              <span>collections</span>
+            </Link>
+          </li>
+          <li>
+            <Link
               to="/admin/create-product"
               className="flex items-center p-2 space-x-3 rounded-md"
             >

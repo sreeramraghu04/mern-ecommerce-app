@@ -3,6 +3,8 @@ import axios from "axios";
 import { toast } from "sonner";
 import { Checkbox, Radio } from "antd";
 import { Prices } from "../components/Prices";
+import SearchForm from "../components/forms/SearchForm";
+import { NavLink } from "react-router-dom";
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -14,11 +16,13 @@ const Home = () => {
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
 
+  const [loading, setLoading] = useState(false);
+
   //! fetching all collections
   const getAllCollections = async () => {
     try {
       const { data } = await axios.get(
-        "http://localhost:5000/api/v1/collection/get-all-collection"
+        "http://localhost:5000/api/v1/collection/get-all-collection",
       );
       if (data?.success) {
         setCollection(data?.collection);
@@ -38,7 +42,7 @@ const Home = () => {
   const getAllProducts = async () => {
     try {
       const { data } = await axios.get(
-        "http://localhost:5000/api/v1/product/get-all-products"
+        "http://localhost:5000/api/v1/product/get-all-products",
       );
       if (data?.success) {
         setProducts(data?.products);
@@ -48,6 +52,21 @@ const Home = () => {
       toast.error("Something went wrong while fetching products");
     }
   };
+
+  /* //! fethcing all products
+  const getAllProducts = async () => {
+    try {
+      setLoading(true);
+      const { data } = await axios.get(
+        `http://localhost:5000/api/v1/product/product-list/${page}`
+      );
+      setLoading(false);
+      setProducts(data.products);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  }; */
 
   /* useEffect(() => {
     getAllProducts();
@@ -61,7 +80,7 @@ const Home = () => {
   const getTotal = async () => {
     try {
       const { data } = await axios.get(
-        "http://localhost:5000/api/v1/product/product-count"
+        "http://localhost:5000/api/v1/product/product-count",
       );
       setTotal(data?.total);
     } catch (error) {
@@ -78,7 +97,7 @@ const Home = () => {
         {
           checked,
           radio,
-        }
+        },
       );
       setProducts(data?.products);
       console.log("data", data.products);
@@ -89,8 +108,9 @@ const Home = () => {
 
   useEffect(() => {
     getAllCollections();
-    getAllProducts();
+    /* getAllProducts(); */
     getTotal();
+    loadMore(); //* page = 1
   }, []);
 
   /* useEffect(() => {
@@ -111,6 +131,27 @@ const Home = () => {
     }
   }, [checked, radio]);
 
+  useEffect(() => {
+    if (page === 1) return;
+    loadMore();
+  }, [page]);
+
+  //! load more
+  const loadMore = async () => {
+    try {
+      setLoading(true);
+      const { data } = await axios.get(
+        `http://localhost:5000/api/v1/product/product-list/${page}`,
+      );
+      setLoading(false);
+      /* setProducts([...products, ...data?.products]); */
+      setProducts((prev) => [...prev, ...data.products]);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
+
   //! product filtering
   /* const handleFilter = (value, id) => {
     let all = [...checked];
@@ -123,7 +164,7 @@ const Home = () => {
   }; */
   const handleFilter = (value, id) => {
     setChecked((prev) =>
-      value ? [...prev, id] : prev.filter((item) => item !== id)
+      value ? [...prev, id] : prev.filter((item) => item !== id),
     );
   };
 
@@ -145,7 +186,32 @@ const Home = () => {
             Start Exploring
           </button>
         </div>
-        <div className="p-5 w-12 bg-red-500">{total}</div>
+        {/* Total Products */}
+        <div className="flex gap-5">
+          <div className="p-5 w-12 h-15 bg-red-500"> {total}</div>
+          <div className="m-2 p-3">
+            {/* {products && products.length < total && (
+              <button
+                className="bg-green-500"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setPage(page + 1);
+                }}
+              >
+                {loading ? "Loading..." : "Load more"}
+              </button>
+            )} */}
+            {products.length < total && (
+              <button
+                className="bg-green-500 text-white px-4 py-2 rounded mt-4"
+                onClick={() => setPage((prev) => prev + 1)}
+                disabled={loading}
+              >
+                {loading ? "Loading..." : "Load More"}
+              </button>
+            )}
+          </div>
+        </div>
         {/* Collections Filtering */}
         <div className="text-red-500">
           <h1 className="mb-2 underline underline-offset-2 text-xl font-bold">
@@ -195,37 +261,48 @@ const Home = () => {
           <div>{JSON.stringify(radio, null, 2)}</div>
         </div>
 
+        {/* Search Form */}
+        <div>
+          <SearchForm />
+        </div>
+
         {/* Products */}
-        <div className="grid grid-cols-3 mt-10">
+        <div className="grid grid-cols-3 gap-5 mt-10">
           {products.map((item) => {
             return (
               <div key={item._id}>
-                <div className="max-w-xs bg-gray-50 text-gray-800">
-                  <div className="flex flex-col justify-between p-6 space-y-8">
-                    <img
-                      src={`http://localhost:5000/api/v1/product/get-product-image/${item._id}`}
-                      alt="photo"
-                      className="h-60 w-auto object-cover object-center bg-gray-500"
-                    />
-                    <div className="space-y-2">
-                      <h2 className="text-3xl font-semibold tracking-wide">
-                        {item.name}
-                      </h2>
-                      <p className="text-gray-800">{item.description}</p>
-                      <div className="flex justify-between">
-                        <h1 className="text-gray-800">Price : {item.price}</h1>
-                        <h1 className="text-gray-800">
-                          Quantity : {item.quantity}
-                        </h1>
+                <div className="bg-white hover:bg-gray-100 w-75">
+                  <div className="flex flex-col justify-between items-center p-5">
+                    <NavLink to={`/product/${item.slug}`}>
+                      <img
+                        src={`http://localhost:5000/api/v1/product/get-product-image/${item._id}`}
+                        alt="photo"
+                        className="h-50 w-auto object-cover object-center bg-gray-500 border border-red-500"
+                      />
+                      <div className="space-y-2 mt-2">
+                        <h2 className="text-3xl font-semibold tracking-wide text-red-500">
+                          {item.name}
+                        </h2>
+                        <p className="text-gray-800">{item.description}</p>
+                        <div className="flex justify-between gap-3">
+                          <h1 className="text-gray-800">
+                            Price : {item.price}/-
+                          </h1>
+                          <h1 className="text-gray-800">
+                            Quantity : {item.quantity}
+                          </h1>
+                        </div>
+                        <div className="flex justify-between">
+                          <h1 className="text-gray-800">
+                            stock : {item.stock}
+                          </h1>
+                          <h1 className="text-gray-800">sold : {item.sold}</h1>
+                        </div>
+                        <h2 className="text-2xl font-semibold tracking-wide">
+                          {item.shipping}
+                        </h2>
                       </div>
-                      <div className="flex justify-between">
-                        <h1 className="text-gray-800">stock : {item.stock}</h1>
-                        <h1 className="text-gray-800">sold : {item.sold}</h1>
-                      </div>
-                      <h2 className="text-2xl font-semibold tracking-wide">
-                        {item.shipping}
-                      </h2>
-                    </div>
+                    </NavLink>
                   </div>
                 </div>
               </div>

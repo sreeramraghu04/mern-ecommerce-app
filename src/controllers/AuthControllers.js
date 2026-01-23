@@ -7,6 +7,7 @@ const cookieOptions = {
   httpOnly: true,
 };
 
+//! sign-up
 export const signUp = async (req, res) => {
   try {
     //* get info from frontend
@@ -15,7 +16,7 @@ export const signUp = async (req, res) => {
     if (!name || !email || !password || !phone || !address) {
       return res.status(400).json({
         success: false,
-        message: `please fill the all fileds to sign-up`,
+        message: `fill the all fileds to sign-up`,
       });
     }
     // check if the the user already existing or not
@@ -24,7 +25,7 @@ export const signUp = async (req, res) => {
     if (existingUser) {
       res.status(200).json({
         success: false,
-        message: `you have already have an account please sign-in`,
+        message: `you have already have an account please log-in`,
       });
     }
     // if the user doesnt exist create a user
@@ -38,7 +39,7 @@ export const signUp = async (req, res) => {
     user.password = undefined;
     res.status(201).json({
       success: true,
-      message: `user has been created successfully`,
+      message: `User created successfully`,
       user,
     });
   } catch (error) {
@@ -46,15 +47,13 @@ export const signUp = async (req, res) => {
     // send error message to the user
     res.status(500).json({
       success: false,
-      message: `error in signup functionality ${error}`,
+      message: `error in sign-up functionality ${error}`,
       error,
     });
   }
 };
 
 //! login
-// routes : /api/v1/auth/login
-// description : login functionality
 export const logIn = async (req, res) => {
   try {
     //* get info from frontend
@@ -72,7 +71,7 @@ export const logIn = async (req, res) => {
     if (!user) {
       res.status(404).json({
         success: false,
-        message: `user not found please signup`,
+        message: `user not found please sign-up`,
       });
     }
     // if user exists compare password
@@ -88,7 +87,7 @@ export const logIn = async (req, res) => {
     const token = JWT.sign(
       { _id: user._id, role: user.role },
       config.JWT_SECRET,
-      { expiresIn: config.JWT_EXPIRY }
+      { expiresIn: config.JWT_EXPIRY },
     );
     //* flush out password
     user.password = undefined;
@@ -98,7 +97,7 @@ export const logIn = async (req, res) => {
     // send success message to the user
     res.status(200).json({
       success: true,
-      message: `user loged in successfully`,
+      message: `User logged-in successfully`,
       user: {
         id: user._id,
         name: user.name,
@@ -119,8 +118,6 @@ export const logIn = async (req, res) => {
 };
 
 //! logout
-// routes : /api/v1/auth/logout
-// description : logout functionality
 export const logOut = async (req, res) => {
   try {
     //* remove generated token from the cookie
@@ -131,13 +128,13 @@ export const logOut = async (req, res) => {
     // send success message to the user
     res.status(200).json({
       success: true,
-      message: `user loged out successfully`,
+      message: `User logged-out successfully`,
     });
   } catch (error) {
     console.log(error);
     res.status(500).json({
       success: false,
-      message: `error in logout functionality`,
+      message: `error in logout functionality ${error}`,
     });
   }
 };

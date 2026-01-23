@@ -54,16 +54,21 @@ import AdminDashboard from "./pages/admin/adminDashboard";
 import AdminRoute from "./components/router/AdminRoute";
 import Spinner from "./components/Spinner";
 import UpdateProduct from "./pages/admin/UpdateProduct";
+import SearchPage from "./pages/SearchPage";
+import ProductDetails from "./pages/ProductDetails";
+import Collections from "./pages/admin/Collection";
+import CollectionProducts from "./pages/CollectionProducts";
+import CartPage from "./pages/user/CartPage";
 
 function App() {
   return (
     <div>
       <Routes>
         <Route path="/" element={<Layout />}>
+          <Route path="search" element={<SearchPage />} />
           <Route index element={<Home />} />
           <Route path="dashboard" element={<Spinner />} />
           <Route path="login" element={<Login />} />
-
           <Route
             path="/user/dashboard"
             element={
@@ -72,7 +77,6 @@ function App() {
               </PrivateRoute>
             }
           />
-
           <Route
             path="/admin/dashboard"
             element={
@@ -81,15 +85,20 @@ function App() {
               </AdminRoute>
             }
           />
-
           <Route
             path="/admin/create-collection"
             element={<CreateCollection />}
           />
           <Route path="/admin/create-product" element={<CreateProduct />} />
-          <Route path="/admin/update-product" element={<UpdateProduct />} />
-
+          <Route
+            path="/admin/update-product/:slug"
+            element={<UpdateProduct />}
+          />
           <Route path="/admin/products" element={<Products />} />
+          <Route path="/admin/collections" element={<Collections />} />
+          <Route path="/collection/:slug" element={<CollectionProducts />} />
+          <Route path="/product/:slug" element={<ProductDetails />} />
+          <Route path="/cart" element={<CartPage />} />
           <Route path="/admin/users-list" element={<UsersList />} />
           <Route path="/user/profile" element={<ProfilePage />} />
           <Route path="/user/orders" element={<OrdersPage />} />
