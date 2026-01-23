@@ -173,7 +173,7 @@ const Home = () => {
       {/* Functional Overview Section */}
       <main className="w-full max-w-7xl">
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-8 sm:mb-10 text-[#8B5CF6]">
-          Welcome to ShopVerse{" "}
+          Welcome to MERNMart{" "}
         </h2>
 
         <p className="mb-10 max-w-3xl mx-auto text-center text-[#9CA3AF] leading-relaxed px-2 text-base sm:text-lg">

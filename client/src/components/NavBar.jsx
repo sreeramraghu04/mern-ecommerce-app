@@ -43,7 +43,7 @@ const NavBar = () => {
           {/* Nmae & Logo */}
           <div className="flex-shrink-0">
             <h1 className="text-3xl md:text-4xl font-bold text-[#8B5CF6]">
-              VirtuShop
+              MernMart
             </h1>
           </div>
 
