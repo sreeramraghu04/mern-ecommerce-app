@@ -123,19 +123,6 @@ const Home = () => {
     if (checked.length || radio.length) filterProduct();
   }, [checked, radio]); */
 
-  useEffect(() => {
-    if (checked.length === 0 && radio.length === 0) {
-      getAllProducts();
-    } else {
-      filterProduct();
-    }
-  }, [checked, radio]);
-
-  useEffect(() => {
-    if (page === 1) return;
-    loadMore();
-  }, [page]);
-
   //! load more
   const loadMore = async () => {
     try {
@@ -168,148 +155,210 @@ const Home = () => {
     );
   };
 
+  useEffect(() => {
+    if (checked.length === 0 && radio.length === 0) {
+      getAllProducts();
+    } else {
+      filterProduct();
+    }
+  }, [checked, radio]);
+
+  useEffect(() => {
+    if (page === 1) return;
+    loadMore();
+  }, [page]);
+
   return (
-    <div className="min-h-screen bg-[#0B0F1A] text-white flex flex-col items-center justify-center px-4 sm:px-6 md:px-10 py-12 sm:py-16">
-      {/* Functional Overview Section */}
-      <main className="w-full max-w-7xl">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-8 sm:mb-10 text-[#8B5CF6]">
-          Welcome to MERNMart{" "}
-        </h2>
+    <div className="min-h-screen">
+      {/* HERO SECTION */}
+      <section className="relative bg-gradient-to-br from-slate-900 via-indigo-900 to-purple-900 overflow-hidden py-28 lg:py-50">
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-black/40"></div>
 
-        <p className="mb-10 max-w-3xl mx-auto text-center text-[#9CA3AF] leading-relaxed px-2 text-base sm:text-lg">
-          The most immersive shopping experience powered by AR, AI, and smart
-          tech.
-        </p>
+        {/* Soft background glow */}
+        <div className="absolute -top-32 -left-32 w-[500px] h-[500px] bg-indigo-500/30 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-32 -right-32 w-[500px] h-[500px] bg-purple-500/30 rounded-full blur-3xl"></div>
 
-        <div className="mt-12 flex items-center justify-center">
-          <button className="bg-[#EC4899] hover:bg-[#8B5CF6] text-white px-6 py-3 rounded-xl shadow-md transition-all">
-            Start Exploring
-          </button>
-        </div>
-        {/* Total Products */}
-        <div className="flex gap-5">
-          <div className="p-5 w-12 h-15 bg-red-500"> {total}</div>
-          <div className="m-2 p-3">
-            {/* {products && products.length < total && (
-              <button
-                className="bg-green-500"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setPage(page + 1);
-                }}
-              >
-                {loading ? "Loading..." : "Load more"}
-              </button>
-            )} */}
-            {products.length < total && (
-              <button
-                className="bg-green-500 text-white px-4 py-2 rounded mt-4"
-                onClick={() => setPage((prev) => prev + 1)}
-                disabled={loading}
-              >
-                {loading ? "Loading..." : "Load More"}
-              </button>
-            )}
+        <div className="relative max-w-7xl mx-auto px-6 text-center text-white">
+          {/* Brand */}
+          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-8 bg-gradient-to-r from-white via-indigo-200 to-purple-200 bg-clip-text text-transparent">
+            MernMart
+          </h1>
+
+          {/* Tagline */}
+          <p className="max-w-3xl mx-auto text-xl md:text-2xl text-gray-200 leading-relaxed mb-14">
+            Discover premium products, seamless shopping, and fast delivery —
+            all in one modern marketplace.
+          </p>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-6 justify-center">
+            <a
+              href="#products"
+              className="px-12 py-5 rounded-2xl font-bold text-lg text-white bg-gradient-to-r from-emerald-500 to-green-600 shadow-xl hover:shadow-2xl hover:scale-105 transition-all"
+            >
+              Shop Now
+            </a>
+
+            <NavLink
+              to="/searchproducts"
+              className="px-12 py-5 rounded-2xl font-bold text-lg
+        bg-white/10 backdrop-blur-md border border-white/30 text-white
+        hover:bg-white hover:text-gray-900 hover:scale-105 transition-all"
+            >
+              Explore Products
+            </NavLink>
           </div>
         </div>
-        {/* Collections Filtering */}
-        <div className="text-red-500">
-          <h1 className="mb-2 underline underline-offset-2 text-xl font-bold">
-            List of available collections
-          </h1>
-          <div className="text-green-500">
-            {/* {collection?.map((item) => {
-              return (
-                <div className="text-blue-500 bg-gray-500">
+      </section>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:pt-24">
+        {/* Stats Row */}
+        <div className="grid md:grid-cols-4 gap-8 mb-20 text-center">
+          <div id="products">
+            <div className="text-4xl font-black text-blue-600 mb-2">
+              {total}
+            </div>
+            <div className="text-gray-600 font-semibold">Products</div>
+          </div>
+          <div>
+            <div className="text-4xl font-black text-emerald-600 mb-2">24h</div>
+            <div className="text-gray-600 font-semibold">Fast Delivery</div>
+          </div>
+          <div>
+            <div className="text-4xl font-black text-purple-600 mb-2">100%</div>
+            <div className="text-gray-600 font-semibold">Secure</div>
+          </div>
+          <div>
+            <div className="text-4xl font-black text-orange-600 mb-2">₹0</div>
+            <div className="text-gray-600 font-semibold">Free Shipping</div>
+          </div>
+        </div>
+
+        {/* Filters & Search */}
+        <div className="grid lg:grid-cols-4 gap-8">
+          {/* Filters Sidebar */}
+          <div className="lg:col-span-1 space-y-6 bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-xl sticky top-24 h-115">
+            <h3 className="text-2xl font-bold text-gray-900 mb-6">Filters</h3>
+
+            {/* Collections */}
+            <div>
+              <h4 className="font-semibold text-lg mb-4 text-gray-900 flex items-center">
+                📂 Collections
+              </h4>
+              <div className="space-y-3 max-h-64">
+                {collection?.map((item) => (
                   <Checkbox
+                    key={item._id}
                     onChange={(e) => handleFilter(e.target.checked, item._id)}
-                    className="text-white"
+                    className="text-lg transform hover:scale-105 transition-all"
                   >
-                    {item.name}
+                    <span className="ml-3 text-gray-700 font-medium">
+                      {item.name}
+                    </span>
                   </Checkbox>
-                </div>
-              );
-            })} */}
-            {collection?.map((item) => (
-              <div key={item._id} className="text-blue-500 bg-gray-500">
-                <Checkbox
-                  onChange={(e) => handleFilter(e.target.checked, item._id)}
-                  className="text-white"
-                >
-                  {item.name}
-                </Checkbox>
+                ))}
               </div>
-            ))}
+            </div>
+
+            {/* Price Filter */}
+            <div>
+              <h4 className="font-semibold text-lg mb-4 text-gray-900 flex items-center">
+                💰 Price Range
+              </h4>
+              <Radio.Group
+                onChange={(e) => setRadio(e.target.value)}
+                className="space-y-2"
+              >
+                {Prices?.map((item) => (
+                  <div key={item._id}>
+                    <Radio
+                      value={item.arr}
+                      className="text-lg transform hover:scale-105 transition-all"
+                    >
+                      <span className="ml-3">{item.name}</span>
+                    </Radio>
+                  </div>
+                ))}
+              </Radio.Group>
+            </div>
           </div>
-          <div>{JSON.stringify(checked, null, 2)}</div>
-        </div>
 
-        {/* Price Filtering */}
-        <div className="text-red-500">
-          <h1 className="mb-2 underline underline-offset-2 text-xl font-bold">
-            Filter by prices
-          </h1>
-          <div className="text-green-500">
-            <Radio.Group onChange={(e) => setRadio(e.target.value)}>
-              {Prices?.map((item) => (
-                <div key={item._id}>
-                  <Radio value={item.arr}>{item.name}</Radio>
-                </div>
-              ))}
-            </Radio.Group>
-          </div>
-          <div>{JSON.stringify(radio, null, 2)}</div>
-        </div>
+          {/* Products Grid */}
+          <div className="lg:col-span-3">
+            {/* Load More */}
+            {products.length < total && (
+              <div className="text-center mb-12">
+                <button
+                  className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-emerald-500 to-green-600 text-white font-bold text-lg rounded-3xl shadow-xl hover:shadow-2xl hover:from-emerald-600 hover:to-green-700 transform hover:-translate-y-1 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  onClick={() => setPage((prev) => prev + 1)}
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin mr-3"></div>
+                      Loading...
+                    </>
+                  ) : (
+                    "Load More Products"
+                  )}
+                </button>
+              </div>
+            )}
 
-        {/* Search Form */}
-        <div>
-          <SearchForm />
-        </div>
-
-        {/* Products */}
-        <div className="grid grid-cols-3 gap-5 mt-10">
-          {products.map((item) => {
-            return (
-              <div key={item._id}>
-                <div className="bg-white hover:bg-gray-100 w-75">
-                  <div className="flex flex-col justify-between items-center p-5">
-                    <NavLink to={`/product/${item.slug}`}>
+            {/* Product Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {products.map((item) => (
+                <NavLink
+                  key={item._id}
+                  to={`/product/${item.slug}`}
+                  className="group"
+                >
+                  <div className="bg-white rounded-3xl shadow-lg hover:shadow-2xl overflow-hidden transition-all duration-300 p-2">
+                    <div className="h-50 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden relative group-hover:bg-gradient-to-br group-hover:from-blue-50 group-hover:to-indigo-50">
                       <img
                         src={`http://localhost:5000/api/v1/product/get-product-image/${item._id}`}
-                        alt="photo"
-                        className="h-50 w-auto object-cover object-center bg-gray-500 border border-red-500"
+                        alt={item.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 border-b border-gray-200"
+                        onError={(e) =>
+                          (e.target.src = "/api/placeholder/400/300")
+                        }
                       />
-                      <div className="space-y-2 mt-2">
-                        <h2 className="text-3xl font-semibold tracking-wide text-red-500">
-                          {item.name}
-                        </h2>
-                        <p className="text-gray-800">{item.description}</p>
-                        <div className="flex justify-between gap-3">
-                          <h1 className="text-gray-800">
-                            Price : {item.price}/-
-                          </h1>
-                          <h1 className="text-gray-800">
-                            Quantity : {item.quantity}
-                          </h1>
+                      {item.shipping === "1" && (
+                        <div className="absolute top-4 right-4 bg-emerald-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+                          Free Shipping
                         </div>
-                        <div className="flex justify-between">
-                          <h1 className="text-gray-800">
-                            stock : {item.stock}
-                          </h1>
-                          <h1 className="text-gray-800">sold : {item.sold}</h1>
-                        </div>
-                        <h2 className="text-2xl font-semibold tracking-wide">
-                          {item.shipping}
-                        </h2>
+                      )}
+                    </div>
+                    <div className="p-6 space-y-4">
+                      <h3 className="text-xl font-bold text-gray-900 line-clamp-2 group-hover:text-blue-600 transition-colors">
+                        {item.name}
+                      </h3>
+                      <p className="text-gray-600 line-clamp-2 leading-relaxed">
+                        {item.description}
+                      </p>
+                      <div className="grid grid-cols-2 gap-2 text-sm text-gray-500">
+                        <div>Qty: {item.quantity}</div>
+                        <div>Stock: {item.stock}</div>
                       </div>
-                    </NavLink>
+                      <div className="pt-4 border-t">
+                        <div className="flex items-center justify-between">
+                          <span className="text-2xl font-black text-emerald-600">
+                            ₹{item.price}/-
+                          </span>
+                          <span className="text-xs bg-gray-100 px-1 py-1 rounded-full text-gray-600 font-medium">
+                            {item.sold} sold
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            );
-          })}
+                </NavLink>
+              ))}
+            </div>
+          </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 };

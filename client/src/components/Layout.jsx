@@ -6,9 +6,9 @@ import { Toaster } from "sonner";
 
 const Layout = () => {
   return (
-    <div className="flex flex-col min-h-screen bg-[#0B0F1A]">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       <NavBar />
-      <main className="flex-grow px-4 sm:px-6 md:px-10">
+      <main className="flex-grow mx-auto">
         <Outlet />
       </main>
       <Footer />

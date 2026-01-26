@@ -26,32 +26,78 @@ const ProductDetails = () => {
     if (slug) getProduct();
   }, [slug]);
 
-  if (!product) return <h2>Loading...</h2>;
+  if (!product)
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-20 h-20 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-6"></div>
+          <h2 className="text-2xl font-bold text-gray-600">
+            Loading product details...
+          </h2>
+        </div>
+      </div>
+    );
 
   return (
-    <div className="bg-red-500 p-5">
-      <h1 className="text-2xl font-bold">Product Details</h1>
-      <div className="border p-5 bg-white">
-        <img
-          src={`http://localhost:5000/api/v1/product/get-product-image/${product._id}`}
-          alt={product.name}
-        />
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white py-12 lg:py-24">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid lg:grid-cols-2 gap-12 items-start">
+          {/* Image */}
+          <div className="group">
+            <div className="relative bg-white rounded-3xl shadow-2xl overflow-hidden">
+              <img
+                src={`http://localhost:5000/api/v1/product/get-product-image/${product._id}`}
+                alt={product.name}
+                className="w-full h-96 lg:h-[500px] object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+              {product.shipping === "1" && (
+                <div className="absolute top-6 right-6 bg-emerald-500 text-white px-4 py-2 rounded-2xl font-bold shadow-2xl">
+                  Free Shipping
+                </div>
+              )}
+            </div>
+          </div>
 
-        <h4>Name: {product.name}</h4>
-        <p>Description: {product.description}</p>
-        <h5>Price: ₹ {product.price}</h5>
-        <h6>Collection: {product?.collection?.name}</h6>
+          {/* Details */}
+          <div className="space-y-8 lg:sticky lg:top-24">
+            <div>
+              <h1 className="text-4xl lg:text-5xl font-black text-gray-900 mb-6">
+                {product.name}
+              </h1>
+              <div className="flex items-center gap-6 mb-8">
+                <span className="text-5xl font-black text-emerald-600">
+                  ₹{product.price}
+                </span>
+                <span className="px-4 py-2 bg-gray-100 text-gray-700 rounded-2xl font-semibold">
+                  In Stock: {product.stock}
+                </span>
+              </div>
+              <p className="text-xl text-gray-700 leading-relaxed">
+                {product.description}
+              </p>
+              <p className="text-lg text-gray-600 mt-4">
+                Collection:{" "}
+                <span className="font-semibold text-blue-600">
+                  {product?.collection?.name}
+                </span>
+              </p>
+            </div>
 
-        <button
-          className="bg-green-500 p-3 mt-3 cursor-pointer hover:bg-green-600"
-          onClick={() => {
-            setCart([...cart, product]);
-            localStorage.setItem("cart", JSON.stringify([...cart, product]));
-            toast.success("Product added to cart");
-          }}
-        >
-          Add to cart
-        </button>
+            <button
+              className="w-full bg-gradient-to-r from-emerald-500 to-green-600 text-white py-5 px-8 font-bold text-xl rounded-3xl shadow-2xl hover:shadow-3xl hover:from-emerald-600 hover:to-green-700 transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3"
+              onClick={() => {
+                setCart([...cart, product]);
+                localStorage.setItem(
+                  "cart",
+                  JSON.stringify([...cart, product]),
+                );
+                toast.success("Product added to cart");
+              }}
+            >
+              🛒 Add to Cart
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

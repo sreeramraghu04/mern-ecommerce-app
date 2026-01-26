@@ -50,7 +50,7 @@ import Products from "./pages/admin/Product";
 import UsersList from "./pages/admin/UsersList";
 import ProfilePage from "./pages/user/ProfilePage";
 import OrdersPage from "./pages/user/OrdersPage";
-import AdminDashboard from "./pages/admin/adminDashboard";
+import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminRoute from "./components/router/AdminRoute";
 import Spinner from "./components/Spinner";
 import UpdateProduct from "./pages/admin/UpdateProduct";
@@ -59,6 +59,7 @@ import ProductDetails from "./pages/ProductDetails";
 import Collections from "./pages/admin/Collection";
 import CollectionProducts from "./pages/CollectionProducts";
 import CartPage from "./pages/user/CartPage";
+import SearchForm from "./components/forms/SearchForm";
 
 function App() {
   return (
@@ -85,6 +86,7 @@ function App() {
               </AdminRoute>
             }
           />
+          <Route path="/searchproducts" element={<SearchForm />} />
           <Route
             path="/admin/create-collection"
             element={<CreateCollection />}

@@ -1,192 +1,202 @@
+// Replace your entire NavBar.jsx with this modern version:
 import React, { useContext, useState } from "react";
 import AuthContext from "../context/Authcontext";
-import { NavLink, Navigate } from "react-router-dom";
-import ListIcon from "@mui/icons-material/List";
-import DisabledByDefaultIcon from "@mui/icons-material/DisabledByDefault";
-import { toast } from "sonner";
+import { NavLink, useNavigate } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
 import Cartcontext from "../context/Cartcontext.jsx";
-import { Avatar, Badge, Space } from "antd";
+import { toast } from "sonner";
 
 const NavBar = () => {
   const [extendedNavBar, setExtendedNavBar] = useState(false);
-
   const [userMenuOpen, setUserMenuOpen] = useState(false);
-
   const { auth, setAuth } = useContext(AuthContext);
-
   const { cart } = useContext(Cartcontext);
-
-  <Badge count={0} showZero>
-    <Avatar shape="square" size="large"/>
-  </Badge>;
-
-  const handleLinkClick = () => {
-    setExtendedNavBar(false);
-  };
-
-  const handleLinkClickUserMenu = () => {
-    setUserMenuOpen(false);
-  };
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     setAuth({ ...auth, user: null, token: "" });
     localStorage.removeItem("ecommerce");
-    toast.success("successfully loggedout", { duration: 500 });
-    Navigate("/");
+    toast.success("Successfully logged out", { duration: 500 });
+    navigate("/");
   };
 
   return (
-    <div>
-      <header className="px-4 py-5 bg-[#0B0F1A] text-white relative border-b border-gray-800">
-        <div className="container mx-auto flex items-center justify-between gap-6 md:gap-0 p-2">
-          {/* Nmae & Logo */}
-          <div className="flex-shrink-0">
-            <h1 className="text-3xl md:text-4xl font-bold text-[#8B5CF6]">
-              MernMart
-            </h1>
-          </div>
-
-          {/* Navigation Links */}
-          <ul
-            className={`md:static md:flex-row flex flex-col md:flex items-center justify-center space-y-4 md:space-y-0 md:space-x-6 text-lg transition-all duration-300 bg-indigo-900 md:bg-transparent p-4 md:p-0 z-50 w-full md:w-2/3 ${
-              extendedNavBar
-                ? "absolute top-20 left-0 translate-y-0"
-                : "absolute -top-[400px] left-0"
-            }`}
+    <header className="bg-white/80 backdrop-blur-md shadow-lg sticky top-0 z-50 border-b border-gray-200">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-25">
+          {/* Logo */}
+          <NavLink
+            to="/"
+            className="text-2xl font-black bg-gradient-to-r from-blue-800 via-purple-800 to-indigo-200 bg-clip-text text-transparent hover:scale-105 transition-transform"
           >
+            MernMart
+          </NavLink>
+
+          {/* Desktop Nav */}
+          <div className="hidden md:flex items-center">
             <NavLink
               to="/"
-              onClick={handleLinkClick}
-              className={({ isActive }) =>
-                isActive
-                  ? "flex items-center text-[#8B5CF6] border-b border-[#8B5CF6]"
-                  : "flex items-center hover:text-[#22D3EE]"
-              }
+              className="text-lg font-medium text-gray-700 hover:text-blue-600 px-3 py-2 rounded-lg transition-all duration-200 hover:bg-blue-50"
             >
               Home
             </NavLink>
-            {!auth.user ? (
-              <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6 w-full md:w-auto">
+
+            {/* Authenticated User - Cart */}
+            {auth.user ? (
+              <div className="flex items-center gap-4">
                 <NavLink
-                  /* to={`/dashboard/${
-                    auth.user.role==="ADMIN" ? "admin" : "user"
-                  }`} */
+                  to="/cart"
+                  className="relative p-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all"
+                >
+                  <FaShoppingCart size={24} />
+                  {cart?.length > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center font-bold animate-pulse">
+                      {cart.length}
+                    </span>
+                  )}
+                </NavLink>
+              </div>
+            ) : (
+              /* Guest User Links */
+              <div>
+                <NavLink
                   to="/dashboard"
-                  onClick={handleLinkClick}
-                  className={({ isActive }) =>
-                    isActive
-                      ? "flex items-center text-[#8B5CF6] border-b border-[#8B5CF6]"
-                      : "flex items-center hover:text-[#22D3EE]"
-                  }
+                  className="text-lg font-medium text-gray-700 hover:text-blue-600 px-3 py-2 rounded-lg transition-all duration-200 hover:bg-blue-50"
                 >
                   Dashboard
                 </NavLink>
                 <NavLink
                   to="/login"
-                  onClick={handleLinkClick}
-                  className={({ isActive }) =>
-                    isActive
-                      ? "flex items-center text-[#8B5CF6] border-b border-[#8B5CF6]"
-                      : "flex items-center hover:text-[#22D3EE]"
-                  }
+                  className="text-lg font-medium text-gray-700 hover:text-blue-600 px-3 py-2 rounded-lg transition-all hover:bg-blue-50"
                 >
                   Login
                 </NavLink>
-
-                {/* Sign-up button (shown in mobile nav) */}
-                <div className="md:hidden">
-                  <NavLink
-                    to="/signup"
-                    onClick={handleLinkClick}
-                    className="inline-block text-white bg-[#8B5CF6] hover:bg-[#EC4899] px-6 py-2 font-semibold rounded-xl hover:rounded-full"
-                  >
-                    Sign-up
-                  </NavLink>
-                </div>
-              </div>
-            ) : (
-              <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6 w-full md:w-auto relative">
-                {/* ✅ Username Dropdown */}
-                <div className="relative">
-                  <button
-                    onClick={() => setUserMenuOpen(!userMenuOpen)}
-                    className="flex items-center hover:text-[#22D3EE] focus:outline-none"
-                  >
-                    {auth.user.name} ⏷
-                  </button>
-
-                  {userMenuOpen && (
-                    <div className="absolute right-0 mt-2 w-40 bg-white text-black rounded-lg shadow-lg z-50">
-                      <NavLink
-                        to={`/${
-                          auth.user.role === "ADMIN" ? "admin" : "user"
-                        }/dashboard`}
-                        onClick={handleLinkClickUserMenu}
-                        className="block px-4 py-2 hover:bg-gray-100 rounded-lg"
-                      >
-                        Dashboard
-                      </NavLink>
-                      <NavLink
-                        to="/userdetails"
-                        onClick={handleLinkClickUserMenu}
-                        className="block px-4 py-2 hover:bg-gray-100 rounded-lg mb-2"
-                      >
-                        Profile
-                      </NavLink>
-                      {/* <NavLink to="/cart">
-                        <FaShoppingCart size={28} />
-                        {cart?.length}
-                      </NavLink> */}
-                      <Badge count={cart?.length} showZero>
-                        <NavLink
-                          to="/cart"
-                          onClick={handleLinkClickUserMenu}
-                          className="block ml-4 hover:bg-gray-100 rounded-lg"
-                        >
-                          <FaShoppingCart size={30} />
-                        </NavLink>
-                      </Badge>
-                    </div>
-                  )}
-                </div>
-
-                <NavLink
-                  to="/"
-                  onClick={handleLogout}
-                  className="hover:text-red-500 text-[#8B5CF6]"
-                >
-                  Logout?
-                  {/* <span className="font-semibold underline underline-offset-2">
-                    {auth.user.name}?
-                  </span> */}
-                </NavLink>
               </div>
             )}
-          </ul>
+          </div>
 
-          {/* Right: Sign-up button (desktop only) */}
-          <div className="hidden md:block">
+          {/* Right Actions */}
+          <div className="flex items-center space-x-4">
+            {auth.user ? (
+              <div className="relative">
+                <button
+                  onClick={() => setUserMenuOpen(!userMenuOpen)}
+                  className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 p-2 rounded-xl hover:bg-gray-100 transition-all"
+                >
+                  <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center text-white text-sm font-semibold">
+                    {auth.user.name.slice(0, 2).toUpperCase()}
+                  </div>
+                  <span className="font-medium hidden lg:block">
+                    {auth.user.name}
+                  </span>
+                  <svg
+                    className={`w-4 h-4 transition-transform ${userMenuOpen ? "rotate-180" : ""}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </button>
+
+                {userMenuOpen && (
+                  <div className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-2xl border border-gray-100 py-2 z-50 animate-in slide-in-from-top-2 duration-200">
+                    <NavLink
+                      to={`/${auth.user.role === "ADMIN" ? "admin" : "user"}/dashboard`}
+                      onClick={() => setUserMenuOpen(false)}
+                      className="flex items-center px-6 py-3 text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 font-medium transition-all duration-200"
+                    >
+                      📊 Dashboard
+                    </NavLink>
+                    <NavLink
+                      to="/user/profile"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="flex items-center px-6 py-3 text-gray-700 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-teal-50 font-medium transition-all duration-200"
+                    >
+                      👤 Profile
+                    </NavLink>
+                    <NavLink
+                      to="/cart"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="flex items-center px-6 py-3 text-gray-700 hover:bg-gradient-to-r hover:from-orange-50 hover:to-rose-50 font-medium transition-all duration-200"
+                    >
+                      🛒 Cart ({cart?.length || 0})
+                    </NavLink>
+                    <div
+                      onClick={handleLogout}
+                      className="flex items-center px-6 py-3 text-rose-600 hover:bg-rose-50 font-medium cursor-pointer transition-all duration-200 border-t border-gray-100 mt-1"
+                    >
+                      🚪 Logout
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <NavLink
+                to="/signup"
+                className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300"
+              >
+                Get Started
+              </NavLink>
+            )}
+
+            {/* Mobile menu button */}
+            <button
+              className="md:hidden p-2 rounded-xl hover:bg-gray-100 text-gray-600 hover:text-blue-600 transition-all"
+              onClick={() => setExtendedNavBar(!extendedNavBar)}
+            >
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Menu */}
+        {extendedNavBar && (
+          <div className="md:hidden bg-white border-t border-gray-200 shadow-2xl rounded-b-2xl p-6 space-y-4 animate-in slide-in-from-top-4">
+            <NavLink
+              to="/"
+              onClick={() => setExtendedNavBar(false)}
+              className="block py-3 px-4 text-lg font-medium text-gray-700 hover:bg-blue-50 rounded-xl transition-all"
+            >
+              Home
+            </NavLink>
+            <NavLink
+              to="/login"
+              onClick={() => setExtendedNavBar(false)}
+              className="block py-3 px-4 text-lg font-medium text-gray-700 hover:bg-emerald-50 rounded-xl transition-all"
+            >
+              Login
+            </NavLink>
             {!auth.user && (
               <NavLink
                 to="/signup"
-                className="text-white bg-[#8B5CF6] hover:bg-[#EC4899] px-6 py-2 font-semibold rounded-xl hover:rounded-full"
+                onClick={() => setExtendedNavBar(false)}
+                className="block w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-4 font-semibold rounded-xl text-center hover:from-blue-700 hover:to-indigo-700 transition-all"
               >
-                Sign-up
+                Sign Up
               </NavLink>
             )}
           </div>
-
-          {/* Hamburger icon (mobile only) */}
-          <div
-            className="md:hidden p-2 bg-gray-200 text-gray-600 shadow-md hover:bg-gray-100 rounded z-50"
-            onClick={() => setExtendedNavBar(!extendedNavBar)}
-          >
-            {extendedNavBar ? <DisabledByDefaultIcon /> : <ListIcon />}
-          </div>
-        </div>
-      </header>
-    </div>
+        )}
+      </div>
+    </header>
   );
 };
 

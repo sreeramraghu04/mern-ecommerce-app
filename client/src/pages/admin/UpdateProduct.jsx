@@ -91,63 +91,79 @@ const UpdateProduct = () => {
   }, [params, slug]);
 
   return (
-    <div className="flex bg-red-300">
-      <AdminMenu />
-      <div className="flex-1 p-6">
-        <h1 className="text-2xl font-bold mb-6">Update Products</h1>
-
-        {/* Collection Selection */}
-        <div className="mb-6">
-          <label className="block text-lg font-medium mb-3">
-            Manage product:
-          </label>
-          <Select
-            placeholder="Select a collection"
-            size="large"
-            showSearch
-            style={{ width: 300 }}
-            onChange={(value) => setCollection(value)}
-            value={collection}
-            required
-          >
-            {collections?.map((item) => (
-              <Option key={item._id} value={item._id}>
-                {item.name}
-              </Option>
-            ))}
-          </Select>
-          {collection && (
-            <p className="mt-2 text-green-600">
-              Selected Collection:{" "}
-              <strong>
-                {collections.find((c) => c._id === collection)?.name}
-              </strong>
-            </p>
-          )}
+    <div className="min-h-screen py-12 lg:py-24">
+      <div className="flex px-25 mt-5">
+        {/* Sidebar */}
+        <div className="w-64 bg-white/5 backdrop-blur-md border-r border-white/10">
+          <AdminMenu />
         </div>
 
-        {/* Update Form */}
-        <UpdateForm
-          updateProduct={updateProduct}
-          id={id}
-          collections={collections}
-          name={name}
-          description={description}
-          photo={photo}
-          price={price}
-          quantity={quantity}
-          stock={stock}
-          sold={sold}
-          setCollection={setCollection}
-          setShipping={setShipping}
-          setName={setName}
-          setDescription={setDescription}
-          setPhoto={setPhoto}
-          setPrice={setPrice}
-          setQuantity={setQuantity}
-          setStock={setStock}
-          setSold={setSold}
-        />
+        {/* Content */}
+        <div className="flex-1 p-10 overflow-auto text-white">
+          {/* Header */}
+          <div className="mb-12">
+            <h1 className="text-4xl font-black bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
+              Update Product
+            </h1>
+            <p className="text-gray-400 mt-2">
+              Modify existing product details
+            </p>
+          </div>
+
+          {/* Collection Card */}
+          <div>
+            <label className="block text-lg font-bold mb-4 text-gray-600">
+              Manage Product Collection
+            </label>
+
+            <Select
+              placeholder="Select a collection"
+              size="large"
+              showSearch
+              style={{ width: 320 }}
+              onChange={(value) => setCollection(value)}
+              value={collection}
+              required
+            >
+              {collections?.map((item) => (
+                <Option key={item._id} value={item._id}>
+                  {item.name}
+                </Option>
+              ))}
+            </Select>
+
+            {collection && (
+              <p className="mt-4 text-emerald-300 font-medium">
+                Selected: {collections.find((c) => c._id === collection)?.name}
+              </p>
+            )}
+          </div>
+
+          {/* Update Form Card */}
+          <div className="bg-white/10 border border-white/20 rounded-3xl mt-12">
+            <UpdateForm
+              updateProduct={updateProduct}
+              id={id}
+              collections={collections}
+              name={name}
+              description={description}
+              photo={photo}
+              price={price}
+              quantity={quantity}
+              stock={stock}
+              sold={sold}
+              setCollection={setCollection}
+              setShipping={setShipping}
+              setName={setName}
+              setDescription={setDescription}
+              setPhoto={setPhoto}
+              setPrice={setPrice}
+              setQuantity={setQuantity}
+              setStock={setStock}
+              setSold={setSold}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

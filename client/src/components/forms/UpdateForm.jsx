@@ -26,160 +26,95 @@ function UpdateForm({
   setSold,
 }) {
   return (
-    <div>
-      <fieldset className="w-full space-y-1 dark:text-gray-400 text-2xl">
-        <label className="block font-medium underline">
-          {/* create a new product */}
-        </label>
-        <form onSubmit={updateProduct}>
-          <div className="bg-red-300">
-            {/* Remove this Select.Option since we moved it to CreateProduct.jsx */}
-            {/* <Select.Option
-              placeholder="select a collection"
-              size="large"
-              showSearch
-              onChange={(value) => {
-                setCollection(value);
-              }}
-            >
-              {collections?.map((item) => (
-                <Option key={item._id} value={item._id}>
-                  {item.name}
-                </Option>
-              ))}
-            </Select.Option> */}
+    <div className="w-full max-w-3xl">
+      <fieldset className="space-y-6 p-8 bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-gray-200 text-gray-500">
+        <form onSubmit={updateProduct} className="space-y-6">
+          {/* Upload Image */}
+          <div>
+            <label className="block w-full px-6 py-4 border border-dashed border-gray-300 rounded-2xl cursor-pointer bg-white/50 text-gray-600 font-medium">
+              {photo ? photo.name : "Update product image"}
+              <input
+                type="file"
+                hidden
+                accept="image/*"
+                onChange={(e) => setPhoto(e.target.files[0])}
+              />
+            </label>
 
-            <div className="flex flex-col">
-              {/* <div className="flex flex-col">
-                <label className="border px-2 py-2 bg-gray-500 cursor-pointer">
-                  {photo ? photo.name : "upload photo"}
-                  <input
-                    type="file"
-                    name="photo"
-                    accept="image/*"
-                    onChange={(e) => setPhoto(e.target.files[0])}
-                    hidden
-                  />
-                </label>
-              </div>
-
-              <div>
-                {photo && (
-                  <div>
-                    <img
-                      src={URL.createObjectURL(photo)}
-                      alt="productimage"
-                      className="h-[200px]"
-                    />
-                  </div>
-                )}
-              </div> */}
-              <div>
-                <label>
-                  {photo ? photo.name : "upload photo"}
-                  <input
-                    type="file"
-                    name="photo"
-                    accept="image/*"
-                    onChange={(e) => setPhoto(e.target.files[0])}
-                    hidden
-                  />
-                </label>
-              </div>
-              <div>
-                {photo ? (
-                  <div>
-                    <img
-                      src={URL.createObjectURL(photo)}
-                      alt="productimage"
-                      className="h-[200px]"
-                    />
-                  </div>
-                ) : (
-                  <div>
-                    <img
-                      src={`http://localhost:5000/api/v1/product/get-product-image/${id}`}
-                      alt="productimage"
-                    />
-                  </div>
-                )}
-              </div>
-              <label className="border px-2 py-2 bg-gray-500">
-                enter the name here:
-                <input
-                  name="name"
-                  value={name}
-                  type="text"
-                  onChange={(e) => setName(e.target.value)}
-                />
-              </label>
-              <label className="border px-2 py-2 bg-gray-500">
-                enter the decription here:
-                <textarea
-                  name="description"
-                  value={description}
-                  rows={4}
-                  type="text"
-                  onChange={(e) => setDescription(e.target.value)}
-                ></textarea>
-              </label>
-              <label className="border px-2 py-2 bg-gray-500">
-                enter the price:
-                <input
-                  type="number"
-                  value={price}
-                  name="price"
-                  onChange={(e) => setPrice(e.target.value)}
-                />
-              </label>
-              <label className="border px-2 py-2 bg-gray-500">
-                enter the quantity:
-                <input
-                  type="number"
-                  value={quantity}
-                  name="quantity"
-                  onChange={(e) => setQuantity(e.target.value)}
-                />
-              </label>
-              <label className="border px-2 py-2 bg-gray-500">
-                enter the stock:
-                <input
-                  name="stock"
-                  value={stock}
-                  type="number"
-                  onChange={(e) => setStock(e.target.value)}
-                />
-              </label>
-              <label className="border px-2 py-2 bg-gray-500">
-                enter the sold:
-                <input
-                  name="sold"
-                  value={sold}
-                  type="number"
-                  onChange={(e) => setSold(e.target.value)}
-                />
-              </label>
-              <div>
-                <label className="border px-2 py-2 bg-gray-500">
-                  enter the shipping:
-                  <Select
-                    placeholder="select shipping"
-                    size="large"
-                    showSearch
-                    onChange={(value) => {
-                      setShipping(value);
-                    }}
-                  >
-                    <Option value="0">No</Option>
-                    <Option value="1">Yes</Option>
-                  </Select>
-                </label>
-              </div>
-            </div>
-            <button className="px-3 py-3 bg-green-500 text-black" type="submit">
-              Update Product
-            </button>
+            <img
+              src={
+                photo
+                  ? URL.createObjectURL(photo)
+                  : `http://localhost:5000/api/v1/product/get-product-image/${id}`
+              }
+              alt="product"
+              className="mt-4 h-48 rounded-2xl object-cover shadow"
+            />
           </div>
+
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Product name"
+            className="w-full px-5 py-4 rounded-2xl border border-gray-200"
+          />
+
+          <textarea
+            rows="4"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Product description"
+            className="w-full px-5 py-4 rounded-2xl border border-gray-200"
+          />
+
+          <div className="grid grid-cols-2 gap-4">
+            <input
+              type="number"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              placeholder="Price"
+              className="px-5 py-4 rounded-2xl border border-gray-200"
+            />
+            <input
+              type="number"
+              value={quantity}
+              onChange={(e) => setQuantity(e.target.value)}
+              placeholder="Quantity"
+              className="px-5 py-4 rounded-2xl border border-gray-200"
+            />
+            <input
+              type="number"
+              value={stock}
+              onChange={(e) => setStock(e.target.value)}
+              placeholder="Stock"
+              className="px-5 py-4 rounded-2xl border border-gray-200"
+            />
+            <input
+              type="number"
+              value={sold}
+              onChange={(e) => setSold(e.target.value)}
+              placeholder="Sold"
+              className="px-5 py-4 rounded-2xl border border-gray-200"
+            />
+          </div>
+
+          <Select
+            placeholder="Shipping available?"
+            size="large"
+            onChange={(value) => setShipping(value)}
+            className="w-full"
+          >
+            <Option value="0">No</Option>
+            <Option value="1">Yes</Option>
+          </Select>
+
+          <button
+            type="submit"
+            className="w-full py-4 bg-blue-500 text-white font-bold rounded-2xl shadow-lg hover:bg-blue-600 hover:shadow-xl transition mt-5"
+          >
+            Update Product
+          </button>
         </form>
       </fieldset>
     </div>

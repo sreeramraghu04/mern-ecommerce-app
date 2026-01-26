@@ -111,78 +111,77 @@ const CreateCollection = () => {
   };
 
   return (
-    <div className="flex">
-      <AdminMenu />
-      <div className="w-full">
-        <div>
-          <CollectionForm
-            handleSubmit={handleSubmit}
-            value={name}
-            setValue={setName}
-            label="create a new collection"
-          />
+    <div className="min-h-screen py-12 lg:py-24">
+      <div className="flex px-25 mt-5">
+        {/* Sidebar */}
+        <div className="w-64 bg-white/5 backdrop-blur-md border-r border-white/10">
+          <AdminMenu />
         </div>
-        <div className="container p-2 mx-auto sm:p-4">
-          <h2 className="mb-4 text-2xl font-semibold leading-tight text-gray-400 underline">
-            Collections
-          </h2>
-          <div className="overflow-x-auto">
-            <table className="w-full p-6 text-sm text-left whitespace-nowrap border rounded-lg shadow">
-              <thead>
-                <tr className="bg-gray-200">
-                  <th className="p-3 text-gray-700">Name</th>
-                  <th className="p-3 text-gray-700">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {collection.map((item) => (
-                  <tr
-                    key={item._id}
-                    className="border-b hover:bg-gray-900 transition"
-                  >
-                    <td className="px-3 py-2 font-medium text-gray-400">
-                      {item.name}
-                    </td>
-                    <td className="px-3 py-2 flex gap-3">
-                      <button
-                        onClick={() => {
-                          showModal();
-                          setUpdatedname(item.name);
-                          setSelected(item);
-                        }}
-                        className="px-3 py-1 text-sm rounded bg-blue-500 text-white hover:bg-blue-600"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => {
-                          handleDelete(item._id);
-                        }}
-                        className="px-3 py-1 text-sm rounded bg-red-500 text-white hover:bg-red-600"
-                      >
-                        Delete
-                      </button>
-                    </td>
+
+        {/* Right Content */}
+        <div className="flex-1 p-10 overflow-auto">
+          <div>
+            {/* Header */}
+            <div className="mb-12">
+              <h1 className="text-4xl font-black bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
+                Manage Collections
+              </h1>
+              <p className="text-gray-300 mt-2">
+                Create, edit and delete collections
+              </p>
+            </div>
+
+            {/* Create Card */}
+            <div className="bg-white/10 border border-white/20 rounded-3xl p-8 mb-12">
+              <h3 className="text-2xl font-bold mb-6">
+                ➕ Create New Collection
+              </h3>
+              <CollectionForm
+                handleSubmit={handleSubmit}
+                value={name}
+                setValue={setName}
+                label="Enter collection name"
+              />
+            </div>
+
+            {/* Table Card */}
+            <div className="bg-white/10 border border-white/20 rounded-3xl overflow-hidden">
+              <div className="p-8 border-b border-white/20">
+                <h3 className="text-2xl font-bold">
+                  All Collections ({collection.length})
+                </h3>
+              </div>
+
+              <table className="w-full">
+                <thead className="bg-white/5">
+                  <tr>
+                    <th className="px-8 py-6 text-left">#</th>
+                    <th className="px-8 py-6 text-left">Name</th>
+                    <th className="px-8 py-6 text-left">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {collection.map((item, index) => (
+                    <tr
+                      key={item._id}
+                      className="border-t border-white/10 hover:bg-white/10"
+                    >
+                      <td className="px-8 py-6 text-gray-400">{index + 1}</td>
+                      <td className="px-8 py-6 font-bold">{item.name}</td>
+                      <td className="px-8 py-6 flex gap-3">
+                        <button className="px-5 py-2 bg-blue-500/80 rounded-xl font-bold">
+                          ✏️ Edit
+                        </button>
+                        <button className="px-5 py-2 bg-red-500/80 rounded-xl font-bold">
+                          🗑️ Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-          <Modal
-            title="want to edit?"
-            closable={{ "aria-label": "Custom Close Button" }}
-            open={isModalOpen}
-            footer={null}
-            /* onOk={handleOk} */
-            onCancel={handleCancel}
-          >
-            <CollectionForm
-              handleSubmit={handleUpdate}
-              value={updatedname}
-              setValue={setUpdatedname}
-              label="update collection"
-            />
-          </Modal>
         </div>
       </div>
     </div>
