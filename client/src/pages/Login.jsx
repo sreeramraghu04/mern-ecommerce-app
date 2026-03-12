@@ -20,7 +20,7 @@ const Login = () => {
         {
           email,
           password,
-        }
+        },
       );
       /* if (data && data.success) {
         toast.success(data.message);
@@ -75,7 +75,9 @@ const Login = () => {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-sm font-bold text-gray-900 mb-3">Email Address</label>
+            <label className="block text-sm font-bold text-gray-900 mb-3">
+              Email Address
+            </label>
             <input
               type="email"
               value={email}
@@ -86,7 +88,9 @@ const Login = () => {
             />
           </div>
           <div>
-            <label className="block text-sm font-bold text-gray-900 mb-3">Password</label>
+            <label className="block text-sm font-bold text-gray-900 mb-3">
+              Password
+            </label>
             <input
               type="password"
               value={password}
